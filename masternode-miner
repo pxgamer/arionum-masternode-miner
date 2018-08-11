@@ -24,7 +24,6 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 OR OTHER DEALINGS IN THE SOFTWARE.
 */
-error_reporting(0);
 
 if (!extension_loaded('openssl') && !defined('OPENSSL_KEYTYPE_EC')) {
     die('Openssl php extension missing');
@@ -204,9 +203,9 @@ if (!file_exists(__DIR__.'/.env')) {
 
 $f = file(__DIR__.'/.env');
 
-$masternode_public_key = trim($f[0]);
-$masternode_private_key = trim($f[1]);
-$node = trim($f[2]);
+$masternode_public_key = trim($f[0] ?? null);
+$masternode_private_key = trim($f[1] ?? null);
+$node = trim($f[2] ?? null);
 
 if (empty($masternode_public_key)) {
     die('ERROR: Invalid public key');

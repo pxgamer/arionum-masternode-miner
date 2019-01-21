@@ -24,7 +24,13 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 OR OTHER DEALINGS IN THE SOFTWARE.
 */
-error_reporting(0);
+
+const ENV_FILE_PATH = __DIR__.'/.env';
+
+if (!file_exists(ENV_FILE_PATH)) {
+    die('ERROR: Please create a .env file containing the public key on the first row and the private key on the second row.');
+}
+
 if (!defined('OPENSSL_KEYTYPE_EC') && !extension_loaded('openssl')) {
     die('Openssl php extension missing');
 }
@@ -181,11 +187,7 @@ function ecVerify($data, $signature, $key)
     return $res === 1;
 }
 
-if (!file_exists(__DIR__.'/.env')) {
-    die('ERROR: Please create a .env file containing the public key on the first row and the private key on the second row.');
-}
-
-$f = file(__DIR__.'/.env');
+$f = file(ENV_FILE_PATH);
 
 $masternode_public_key = trim($f[0]);
 $masternode_private_key = trim($f[1]);

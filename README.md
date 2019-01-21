@@ -1,8 +1,8 @@
 # masternode-miner
 
-THIS SOFTWARE IS NOW OBSOLETE!
-Should no longer be used. For a masternode guide, follow: https://forum.arionum.com/viewtopic.php?f=13&t=367&p=1669#p1669
-
+> **THIS SOFTWARE IS OBSOLETE AND SHOULD NOT BE USED!**
+>
+> For a masternode guide, [click here](https://forum.arionum.com/viewtopic.php?f=13&t=367).
 
 A proof of concept masternode miner for Arionum.
 
@@ -37,7 +37,7 @@ The masternode must have 99+% uptime
 
 **Keep in mind this is only the very first version of masternodes, which deals mostly with mining. A lot of functionality will be added in the near future and it will be very important to keep your node updated and with the required resources.**
 
-## INSTALL INSTRUCTIONS
+## Install
 
 1. Create a new wallet using the [CLI Wallet](https://github.com/arionum/lightWalletCLI)
 2. Send 100.010 ARO to the new address.

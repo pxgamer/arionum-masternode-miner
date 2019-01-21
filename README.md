@@ -1,5 +1,9 @@
 # masternode-miner
 
+THIS SOFTWARE IS NOW OBSOLETE!
+Should no longer be used. For a masternode guide, follow: https://forum.arionum.com/viewtopic.php?f=13&t=367&p=1669#p1669
+
+
 A proof of concept masternode miner for Arionum.
 
 ## REQUIREMENTS
@@ -19,7 +23,7 @@ The masternode will win one of every 3 blocks.
 
 You should create a new wallet for the masternode. Do not use this wallet for anything else.
 
-The rewards are available immediatly after a block has been won.
+The rewards are available immediately after a block has been won.
 
 The funds are locked for a minimum of 3 Months.
 

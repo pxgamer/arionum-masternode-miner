@@ -130,13 +130,17 @@ function base58Decode($base58)
 
 function pem2coin($data)
 {
-    $data = str_replace([
-        '-----BEGIN PUBLIC KEY-----',
-        '-----END PUBLIC KEY-----',
-        '-----BEGIN EC PRIVATE KEY-----',
-        '-----END EC PRIVATE KEY-----',
-        "\n",
-    ], '', $data);
+    $data = str_replace(
+        [
+            '-----BEGIN PUBLIC KEY-----',
+            '-----END PUBLIC KEY-----',
+            '-----BEGIN EC PRIVATE KEY-----',
+            '-----END EC PRIVATE KEY-----',
+            "\n",
+        ],
+        '',
+        $data
+    );
     $data = base64_decode($data);
     return base58Encode($data);
 }

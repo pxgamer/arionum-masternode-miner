@@ -36,7 +36,7 @@ if ((float)PHP_VERSION < 7.2) {
 }
 
 // Base58 encoding/decoding functions - all credits go to https://github.com/stephen-hill/base58php
-function base58_encode($string)
+function base58Encode($string)
 {
     $alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
     $base = strlen($alphabet);
@@ -78,7 +78,7 @@ function base58_encode($string)
     return $output;
 }
 
-function base58_decode($base58)
+function base58Decode($base58)
 {
     $alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
     $base = strlen($alphabet);
@@ -132,20 +132,20 @@ function pem2coin($data)
         "\n",
     ], '', $data);
     $data = base64_decode($data);
-    return base58_encode($data);
+    return base58Encode($data);
 }
 
-function get_address($hash)
+function getAddress($hash)
 {
     for ($i = 0; $i < 9; $i++) {
         $hash = hash('sha512', $hash, true);
     }
-    return base58_encode($hash);
+    return base58Encode($hash);
 }
 
 function coin2pem($data, $is_private_key = false)
 {
-    $data = base58_decode($data);
+    $data = base58Decode($data);
     $data = base64_encode($data);
 
     $dat = str_split($data, 64);
@@ -157,7 +157,7 @@ function coin2pem($data, $is_private_key = false)
     return "-----BEGIN PUBLIC KEY-----\n{$data}\n-----END PUBLIC KEY-----\n";
 }
 
-function ec_sign($data, $key)
+function ecSign($data, $key)
 {
     $private_key = coin2pem($key, true);
 
@@ -165,14 +165,14 @@ function ec_sign($data, $key)
 
     openssl_sign($data, $signature, $pkey, OPENSSL_ALGO_SHA256);
 
-    return base58_encode($signature);
+    return base58Encode($signature);
 }
 
-function ec_verify($data, $signature, $key)
+function ecVerify($data, $signature, $key)
 {
     $public_key = coin2pem($key);
 
-    $signature = base58_decode($signature);
+    $signature = base58Decode($signature);
 
     $pkey = openssl_pkey_get_public($public_key);
 
@@ -203,7 +203,7 @@ if (empty($node)) {
     $node = 'http://127.0.0.1';
 }
 
-$generator = get_address($masternode_public_key);
+$generator = getAddress($masternode_public_key);
 
 // make sure it's not accessible in the browser
 if (PHP_SAPI !== 'cli') {
@@ -258,7 +258,7 @@ if (($height - 1) % 3 === 2) {
     $json = json_encode($tdata);
     $info = "{$generator}-{$height}-{$date}-{$nonce}-{$json}-{$difficulty}-{$argon}";
 
-    $signature = ec_sign($info, $masternode_private_key);
+    $signature = ecSign($info, $masternode_private_key);
 
 
     $msg = '';
@@ -275,7 +275,7 @@ if (($height - 1) % 3 === 2) {
     ksort($x);
     $info = $x['val'].'-'.$x['fee'].'-'.$x['dst'].'-'.$x['message'].'-'.$x['version'].'-'.$x['public_key'].'-'.$x['date'];
 
-    $reward_signature = ec_sign($info, $masternode_private_key);
+    $reward_signature = ecSign($info, $masternode_private_key);
 
     $postData = http_build_query(
         [

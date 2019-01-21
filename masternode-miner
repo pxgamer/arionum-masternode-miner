@@ -25,14 +25,14 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 OR OTHER DEALINGS IN THE SOFTWARE.
 */
 error_reporting(0);
-if (!extension_loaded("openssl") && !defined("OPENSSL_KEYTYPE_EC")) {
-    die("Openssl php extension missing");
+if (!defined('OPENSSL_KEYTYPE_EC') && !extension_loaded('openssl')) {
+    die('Openssl php extension missing');
 }
-if (!extension_loaded("gmp")) {
-    die("GMP php extension missing");
+if (!extension_loaded('gmp')) {
+    die('GMP php extension missing');
 }
 if ((float)PHP_VERSION < 7.2) {
-    die("The minimum php version required is 7.2");
+    die('The minimum php version required is 7.2');
 }
 
 // Base58 encoding/decoding functions - all credits go to https://github.com/stephen-hill/base58php
@@ -124,11 +124,13 @@ function base58_decode($base58)
 
 function pem2coin($data)
 {
-    $data = str_replace("-----BEGIN PUBLIC KEY-----", "", $data);
-    $data = str_replace("-----END PUBLIC KEY-----", "", $data);
-    $data = str_replace("-----BEGIN EC PRIVATE KEY-----", "", $data);
-    $data = str_replace("-----END EC PRIVATE KEY-----", "", $data);
-    $data = str_replace("\n", "", $data);
+    $data = str_replace([
+        '-----BEGIN PUBLIC KEY-----',
+        '-----END PUBLIC KEY-----',
+        '-----BEGIN EC PRIVATE KEY-----',
+        '-----END EC PRIVATE KEY-----',
+        "\n",
+    ], '', $data);
     $data = base64_decode($data);
     return base58_encode($data);
 }
@@ -150,9 +152,9 @@ function coin2pem($data, $is_private_key = false)
     $data = implode("\n", $dat);
 
     if ($is_private_key) {
-        return "-----BEGIN EC PRIVATE KEY-----\n".$data."\n-----END EC PRIVATE KEY-----\n";
+        return "-----BEGIN EC PRIVATE KEY-----\n{$data}\n-----END EC PRIVATE KEY-----\n";
     }
-    return "-----BEGIN PUBLIC KEY-----\n".$data."\n-----END PUBLIC KEY-----\n";
+    return "-----BEGIN PUBLIC KEY-----\n{$data}\n-----END PUBLIC KEY-----\n";
 }
 
 function ec_sign($data, $key)
@@ -179,37 +181,38 @@ function ec_verify($data, $signature, $key)
     return $res === 1;
 }
 
-if (!file_exists(__DIR__."/.env")) {
-    die("ERROR: Please create a .env file containing the public key on the first row and the private key on the second row.");
+if (!file_exists(__DIR__.'/.env')) {
+    die('ERROR: Please create a .env file containing the public key on the first row and the private key on the second row.');
 }
 
-$f = file(__DIR__."/.env");
+$f = file(__DIR__.'/.env');
 
 $masternode_public_key = trim($f[0]);
 $masternode_private_key = trim($f[1]);
 $node = trim($f[2]);
+
 if (empty($masternode_public_key)) {
-    die("ERROR: Invalid public key");
+    die('ERROR: Invalid public key');
 }
 
 if (empty($masternode_private_key)) {
-    die("ERROR: Invalid public key");
+    die('ERROR: Invalid public key');
 }
+
 if (empty($node)) {
-    $node = "http://127.0.0.1";
+    $node = 'http://127.0.0.1';
 }
 
 $generator = get_address($masternode_public_key);
 
-
 // make sure it's not accessible in the browser
 if (PHP_SAPI !== 'cli') {
-    die("This should only be run as cli");
+    die('This should only be run as cli');
 }
 
-$res = file_get_contents("$node/mine.php?q=getWork");
+$res = file_get_contents("{$node}/mine.php?q=getWork");
 $data = json_decode($res, true);
-if ($data['status'] !== "ok") {
+if ($data['status'] !== 'ok') {
     echo "Using external nodes\n";
     $f = file('http://api.arionum.com/peers.txt');
     shuffle($f);
@@ -218,7 +221,7 @@ if ($data['status'] !== "ok") {
         if (strlen(trim($x)) > 5) {
             $node = trim($x);
             $i++;
-            $res = file_get_contents("$node/mine.php?q=getWork");
+            $res = file_get_contents("{$node}/mine.php?q=getWork");
             $data = json_decode($res, true);
             if ($i > 5 || $data['status'] === 'ok') {
                 break;
@@ -226,23 +229,24 @@ if ($data['status'] !== "ok") {
         }
     }
 
-    if ($data['status'] !== "ok") {
+    if ($data['status'] !== 'ok') {
         die("Invalid response from the node!\n");
     }
 }
+
 $height = $data['data']['height'];
 
-
-if (($height - 1) % 3 == 2) {
+if (($height - 1) % 3 === 2) {
     $nonce = base64_encode(openssl_random_pseudo_bytes(32));
-    $nonce = preg_replace("/[^a-zA-Z0-9]/", "", $nonce);
+    $nonce = preg_replace('/[^a-zA-Z0-9]/', '', $nonce);
 
-    $base = $masternode_public_key."-".$nonce."-".$data['data']['block']."-".$data['data']['difficulty'];
+    $base = $masternode_public_key.'-'.$nonce.'-'.$data['data']['block'].'-'.$data['data']['difficulty'];
     $argon = password_hash(
         $base,
         PASSWORD_ARGON2I,
-        ['memory_cost' => 16384, "time_cost" => 4, "threads" => 4]
+        ['memory_cost' => 16384, 'time_cost' => 4, 'threads' => 4]
     );
+
     $date = time();
     $tdata = $data['data']['data'];
     $difficulty = $data['data']['difficulty'];
@@ -254,17 +258,17 @@ if (($height - 1) % 3 == 2) {
 
     $msg = '';
     $x = [
-        "src" => $generator,
-        "dst" => $generator,
-        "val" => $data['data']['reward'],
-        "version" => 0,
-        "date" => $date,
-        "message" => '',
-        "fee" => "0.00000000",
-        "public_key" => $masternode_public_key,
+        'src' => $generator,
+        'dst' => $generator,
+        'val' => $data['data']['reward'],
+        'version' => 0,
+        'date' => $date,
+        'message' => '',
+        'fee' => '0.00000000',
+        'public_key' => $masternode_public_key,
     ];
     ksort($x);
-    $info = $x['val']."-".$x['fee']."-".$x['dst']."-".$x['message']."-".$x['version']."-".$x['public_key']."-".$x['date'];
+    $info = $x['val'].'-'.$x['fee'].'-'.$x['dst'].'-'.$x['message'].'-'.$x['version'].'-'.$x['public_key'].'-'.$x['date'];
 
     $reward_signature = ec_sign($info, $masternode_private_key);
 
@@ -291,7 +295,7 @@ if (($height - 1) % 3 == 2) {
 
     $context = stream_context_create($opts);
 
-    $res = file_get_contents($node."/mine.php?q=submitBlock", false, $context);
+    $res = file_get_contents("{$node}/mine.php?q=submitBlock", false, $context);
 
     $data = json_decode($res, true);
 

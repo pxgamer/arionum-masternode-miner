@@ -259,7 +259,7 @@ if (($height - 1) % 3 === 2) {
 
     ksort($x);
 
-    $info = implode('-', [$x['val'], $x['fee'], $x['dst'], $x['message'], $x['version'], $x['public_key'], $x['date']];
+    $info = implode('-', [$x['val'], $x['fee'], $x['dst'], $x['message'], $x['version'], $x['public_key'], $x['date']]);
 
     $reward_signature = ecSign($info, $masternode_private_key);
 

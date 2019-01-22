@@ -2,70 +2,50 @@
 
 > **THIS SOFTWARE IS OBSOLETE AND SHOULD NOT BE USED!**
 >
-> For a masternode guide, [click here](https://forum.arionum.com/viewtopic.php?f=13&t=367).
+> For an official masternode guide, [click here][link-masternode-setup-guide].
 
-A proof of concept masternode miner for Arionum.
+The deprecated masternode miner for the Arionum cryptocurrency.
 
-## REQUIREMENTS
+## Install
+
+#### Requirements
 
 1. 8 GB RAM
 2. 100GB+ DISK SPACE (SSD)
 3. 4 CPU Cores
-4. 100.000 ARO
+4. 100,010 ARO
 
-## IMPORTANT INFORMATION
+#### Important Information
 
-The masternodes are implemented starting block 80.000
+- The cost of a masternode is 100,000 ARO (plus a 10 ARO creation fee)
+- The funds are locked for a minimum of 3 Months
+- To release the funds, the miner must be paused for 1 month
+- Block winners are chosen in order, therefore all masternodes will receive a reward
+- The IP must remain accessible for the duration of the masternode
 
-The cost of a masternode is 100.000 ARO
+## Usage
 
-The masternode will win one of every 3 blocks.
+1. Create a new wallet using the [command-line wallet][link-arionum-cli]
+1. Send 100,010 ARO to a newly created masternode address
+1. The node must be accessible on IP + port 80 (e.g. http://1.1.2.2)
+1. Edit the `config.inc.php`, set `masternode` to `true` and the `masternode_public_key` to the wallet's public key
+1. Download the [`masternode-miner`](./masternode-miner) to a secure location on the same server
+1. Create a keypair `.env` file in the format shown below
+1. Create a cron task to run `masternode-miner` every minute
+1. Using the command-line wallet, run the command: `arionum masternode:create 'ip'`
+1. After 360 blocks, the masternode will start mining
 
-You should create a new wallet for the masternode. Do not use this wallet for anything else.
+**Create a Cron task**
 
-The rewards are available immediately after a block has been won.
-
-The funds are locked for a minimum of 3 Months.
-
-In order to release the funds, the miner must be paused for 1 month (no won blocks) before a release is accepted. This means that if you want to close the masternode after 3 months, you must pause the masternode after 60 days.
-
-The block winners are chosen in order, so everyone will get their blocks. There's no chance involved.
-
-You must be sure that the IP you set for the masternode will be yours until you decide to close the masternode. 
-
-The masternode must have 99+% uptime
-
-**Keep in mind this is only the very first version of masternodes, which deals mostly with mining. A lot of functionality will be added in the near future and it will be very important to keep your node updated and with the required resources.**
-
-## Install
-
-1. Create a new wallet using the [CLI Wallet](https://github.com/arionum/lightWalletCLI)
-2. Send 100.010 ARO to the new address.
-3. Install the Arionum node on the same server. The node must be accessible on ip + port 80, ex: http://1.1.2.2
-4. Edit the `config.inc.php`, set `$_config['masternode']` to `true` and the 
-`$_config['masternode_public_key']` to the wallet's public key.
-5. Download the [masternode-miner](https://github.com/arionum/masternode-miner) to a secure location 
-on the same server.
-6. Create a .env file in the same folder as the masternode-miner and add in it the public key on the first row and the private key on the second row.
-7. Make the miner executable using `chmod +x masternode-miner`
-8. Create a cronjob to run every minute the masternode-miner file.
-9. Using the cli wallet, run the command: `./light-arionum-cli masternode create [ip]` (replace the IP 
-with the actual IP)
-10. Wait 360 blocks and your masternode will start mining.
-
-### Example cron job
-
-```
-* * * * * YOURUSER /home/YOURUSER/masternode-miner/masternode-miner >/dev/null
+```cron
+* * * * * /etc/arionum-mn/miner >/dev/null
 ```
 
-### Example .env:
+**Environment file format**
 
-*For extra security, you can keep your masternode miner and your keys on a separate secure server by
-adding the masternode address on the third row of the `.env` file as shown in the example.*
+- Public key
+- Private key
+- Node address (e.g. `https://10.0.1.1`)
 
-```
-public-key
-private-key
-http://10.0.1.1
-```
+[link-arionum-cli]: https://github.com/pxgamer/arionum-cli
+[link-masternode-setup-guide]: https://forum.arionum.com/viewtopic.php?f=13&t=367

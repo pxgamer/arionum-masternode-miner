@@ -1,4 +1,4 @@
 preset: psr2
 
 finder:
-  name: masternode-miner
+  name: "masternode-miner"

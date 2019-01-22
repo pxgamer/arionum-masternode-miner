@@ -1,5 +1,9 @@
 # masternode-miner
 
+![Latest Version][ico-version]
+![Software License][ico-license]
+![Style CI][ico-styleci]
+
 > **THIS SOFTWARE IS OBSOLETE AND SHOULD NOT BE USED!**
 >
 > For an official masternode guide, [click here][link-masternode-setup-guide].
@@ -46,6 +50,14 @@ The deprecated masternode miner for the Arionum cryptocurrency.
 - Public key
 - Private key
 - Node address (e.g. `https://10.0.1.1`)
+
+## License
+
+The MIT License (MIT).
+
+[ico-version]: https://img.shields.io/badge/status-deprecated-red.svg?style=flat-square
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+[ico-styleci]: https://styleci.io/repos/143841461/shield
 
 [link-arionum-cli]: https://github.com/pxgamer/arionum-cli
 [link-masternode-setup-guide]: https://forum.arionum.com/viewtopic.php?f=13&t=367

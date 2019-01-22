@@ -1,7 +1,7 @@
 # masternode-miner
 
 ![Latest Version][ico-version]
-![Software License][ico-license]
+[![Software License][ico-license]](LICENSE)
 ![Style CI][ico-styleci]
 
 > **THIS SOFTWARE IS OBSOLETE AND SHOULD NOT BE USED!**
@@ -53,7 +53,7 @@ The deprecated masternode miner for the Arionum cryptocurrency.
 
 ## License
 
-The MIT License (MIT).
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
 
 [ico-version]: https://img.shields.io/badge/status-deprecated-red.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
